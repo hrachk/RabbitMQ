@@ -1,6 +1,9 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client;
+using System;
 using System.Threading.Tasks;
+using Tiarm.RabbitMQ.Consumer;
 
 namespace Tiarm.RabbitMQ.API.Controllers
 {
@@ -24,6 +27,21 @@ namespace Tiarm.RabbitMQ.API.Controllers
             });
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetMessage()
+        {
+            var factory = new ConnectionFactory
+            {
+                Uri = new Uri("amqp://guest:guest@localhost:5672")
+
+            };
+            using var connection = factory.CreateConnection();
+            using var channel = connection.CreateModel();
+
+            var message = QueueConsumer.Consume(channel) ;
+            return new JsonResult(message);
         }
     }
 }

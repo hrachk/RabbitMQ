@@ -19,7 +19,7 @@ namespace Tiarm.RabbitMQ.Producer
 
             while (true)
             {
-                var message = new { Name = "Producer", Message = $"Hello! Count:{count}", Username = "hkarapetyan" };
+                var message = new { Name = "Producer", Message = $"Hello! Count:{count}" };
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
                 channel.BasicPublish("", "demo-queue", null, body);
